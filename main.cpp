@@ -57,7 +57,7 @@ class Driver : public User{
 
 };
 
-class Rider : public User{
+class Rider : public User{    //class name should be passenger instead of rider
     private:
     vector <string> rideHistory;
 
