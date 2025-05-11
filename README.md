@@ -17,6 +17,8 @@ Then, execute the program with:
 
 Make sure all `.cpp` and `.h` files are in the same directory or properly linked, and you have `g++` installed.
 
+
+
 ## Enable Emoji and Unicode Output in VS Code Terminal
 
 To ensure proper display of emojis and Unicode characters in your C++ terminal output, follow these steps:
