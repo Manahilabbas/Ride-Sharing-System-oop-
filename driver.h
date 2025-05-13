@@ -15,18 +15,20 @@ private:
 
 public:
     Driver();
-    Driver(string id, string n, string p);
+    Driver(string id, string n, string p,string pass);
     void signUp() override;
     void askAvailability();
-    void displayInfo() override;
+    //void displayInfo() override;
     void addReview(const DriverReview& review);
+    friend ostream& operator<<(ostream& out, const Driver& driver);
     
     string getCurrentZone() const;
     bool isAvailable() const;
     string getVehicleType() const;
     string getTimestamp() const;
-    void setTimestamp();
+   
     void displayReviews()const;
+    string setTimestamp();
 };
 
 #endif
