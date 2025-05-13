@@ -1,43 +1,94 @@
 #include "auth_manager.h"
-#include "driver.h"
-#include "premium_rider.h"
-#include <iostream>
+string AuthManager::validatePassword() {
+    string pwd;
+    while (true) {
+        try {
+            cout << "\nEnter Password: ";
+            cout << "\nPassword must be exactly 11 characters long, contain at least one digit and one uppercase letter.\n";
 
-using namespace std;
+            char ch;
+            bool hasDigit = false, hasUpper = false;
+            pwd = "";
 
-bool AuthManager::isRegistered(const string& id) {
-    return false;  // Placeholder
+            while (true) {
+                ch = _getch();
+
+                if (ch == 13) break; // Enter
+                else if (ch == 8) {
+                    if (!pwd.empty()) {
+                        pwd.pop_back();
+                        cout << "\b \b";
+                    }
+                } else {
+                    pwd += ch;
+                    cout << "*";
+                    if (isdigit(ch)) hasDigit = true;
+                    if (isupper(ch)) hasUpper = true;
+                }
+            }
+
+            if (pwd.length() != 11)
+                throw invalid_argument("Password must be exactly 11 characters.");
+            if (!hasDigit)
+                throw invalid_argument("Password must contain at least one digit.");
+            if (!hasUpper)
+                throw invalid_argument("Password must contain at least one uppercase letter.");
+
+            cout << "\n✅ Password accepted!\n";
+            return pwd;
+        } catch (const invalid_argument& e) {
+            cout << "\n❌ " << e.what() << "\nPlease try again.\n";
+        }
+    }
+}
+bool isPhoneRegistered(const string& phone) {
+    ifstream file("users.txt");
+    string line;
+    while (file>>line) {
+        size_t pos = line.rfind('|');
+        if (pos != string::npos && line.substr(pos + 1) == phone) {
+            return true;
+        }
+    }
+    return false;
 }
 
-User* AuthManager::signUp(map<string, string>& credentials, vector<User*>& users, bool isDriver) {
+
+
+
+
+User* AuthManager::login(map<string, string>& credentials, vector<User*>& users) {
     string id, pwd;
     cout << "\nEnter ID: "; getline(cin, id);
-    cout << "Enter Password: "; getline(cin, pwd);
-    if (credentials.count(id)) {
-        cout << "\n⚠️ ID already registered. Please login.\n";
-        return nullptr;
+    pwd = validatePassword();
+
+    ifstream infile("users.txt");
+    string line;
+    while (getline(infile, line)) {
+        stringstream ss(line);
+        string fileID, filePwd, name, role;
+
+        getline(ss, fileID, ' ');
+        getline(ss, filePwd, ' ');
+        getline(ss, name, ' ');
+        getline(ss, role, ' ');
+         Subscription plan;
+        if (fileID == id && filePwd == pwd) {
+            User* user = nullptr;
+            if (role == "Driver") user = new Driver(id, name, "",pwd);
+            else if (role == "Rider") user = new Rider(id, name, "",pwd);
+            else if (role == "PremiumRider") user = new PremiumRider(id, name, "",pwd,plan);
+
+            if (user) {
+                users.push_back(user);
+                return user;
+            }
+        }
     }
 
-    credentials[id] = pwd;
-    User* user = isDriver ? static_cast<User*>(new Driver(id, "", "")) : static_cast<User*>(new PremiumRider(id, "", ""));
-    user->signUp();
-    users.push_back(user);
-    return user;
-}
-
-User* AuthManager::login(map<string, string>& credentials, const vector<User*>& users) {
-    string id, pwd;
-    cout << "\nEnter ID: "; getline(cin, id);
-    cout << "Enter Password: "; getline(cin, pwd);
-
-    if (!credentials.count(id) || credentials[id] != pwd) {
-        cout << "\n❌ Invalid credentials!\n";
-        return nullptr;
-    }
-
-    for (auto u : users) {
-        if (u->getID() == id) return u;
-    }
-
+    cout << "\n❌ Invalid credentials or user not found.\n";
     return nullptr;
 }
+
+
+
