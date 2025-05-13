@@ -4,11 +4,16 @@ using namespace std;
 
 Rider::Rider() {}
 
-Rider::Rider(string id, string n, string p) : User(id, n, p, "Rider"), rideHistory(0) {}
+Rider::Rider(string id, string n, string p,string pass) : User(id, n, p, "Rider",pass), rideHistory(0) {}
 
-void Rider::displayInfo() {
-    User::displayInfo();
-    cout << "Total Rides: " << rideHistory << endl;
+// void Rider::displayInfo() {
+//     User::displayInfo();
+//     cout << "Total Rides: " << rideHistory << endl;
+// }
+ostream& operator<<(ostream& out, const Rider& rider) {
+    out << static_cast<const User&>(rider);  // Reuse base class operator<< if defined
+    out << "Total Rides: " << rider.rideHistory << endl;
+    return out;
 }
 
 void Rider::incrementRideHistory() { rideHistory++; }
@@ -26,6 +31,26 @@ void Rider::signUp() {
         cin >> planChoice;
         cin.ignore();
         subscription.setPlan(planChoice);
-        subscription.displaySubscription();
+        cout << subscription;  // Display subscription details
+        //subscription.displaySubscription();
     }
 }
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+
+// Simulated Ride class
+class Ride {
+public:
+    std::string zone;
+    bool assigned;
+
+    Ride(const std::string& z) : zone(z), assigned(false) {}
+
+    bool isAssigned() const { return assigned; }
+    void assign() { assigned = true; }
+    std::string getZone() const { return zone; }
+};
+
+
