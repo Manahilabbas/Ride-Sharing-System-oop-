@@ -12,7 +12,13 @@ private:
 public:
     Subscription();
     void setPlan(int plan);
-    void displaySubscription() const;
+   string getPlanType(){return planType;}
+    double getDiscount() {return discount;}
+  string getExpiryDate(){return expiryDate;}
+    
+    //void displaySubscription() const;
+    friend ostream& operator<<(ostream& out, const Subscription& sub);
 };
+
 
 #endif
