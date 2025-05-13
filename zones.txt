@@ -1,0 +1,14 @@
+Saddar:1,2
+DHA:3,4
+Clifton:5,6
+Gulshan-e-Iqbal:7,8
+PECHS:9,10
+North Karachi:11,12
+Nazimabad:13,14
+Gulberg:15,16
+Malir:17,18
+Korangi:19,20
+Bahadurabad:21,22
+Liaquatabad:23,24
+University Road:25,26
+Model Colony:27,28
