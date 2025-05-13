@@ -1,30 +1,32 @@
-#ifndef DRIVERREVIEW_H
-#define DRIVERREVIEW_H
+#ifndef DRIVER_REVIEW_H
+#define DRIVER_REVIEW_H
 
 #include <string>
-using namespace std;
+#include <iostream>
 
 class DriverReview {
 private:
-    string passengerName;
-    int rideID;
-    double rating;
-    string reviewMessage;
-    string timestamp;
+    std::string passengerName;
+    int rating;
+    std::string reviewMessage;
+    std::string timestamp;
 
 public:
     DriverReview();
-    DriverReview(string passenger, int ride, double rate, string review, string time);
-    void displayReview() const;
-    double getRating() const;
-    string getTimestamp() const;
-    void setTimestamp(string time);
-    string getPassengerName() const { return passengerName; }
-int getRideID() const { return rideID; }
-string getReviewMessage() const { return reviewMessage; }
+    DriverReview(const std::string& name, int rate, const std::string& message, const std::string& time);
 
 
+    static DriverReview fromString(const std::string& line);  // Static method to create from string
 
+    // Getter methods
+    std::string getPassengerName() const { return passengerName; }
+    int getRating() const { return rating; }
+    std::string getReviewMessage() const { return reviewMessage; }
+    std::string getTimestamp() const { return timestamp; }
+
+    friend std::ostream& operator<<(std::ostream& out, const DriverReview& r);
 };
 
-#endif
+void displayReviewsFromFile(const std::string& filename);
+
+#endif // DRIVER_REVIEW_H
