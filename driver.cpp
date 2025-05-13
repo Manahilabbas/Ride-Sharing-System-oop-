@@ -6,7 +6,7 @@ using namespace std;
 
 Driver::Driver() : available(true) {}
 
-Driver::Driver(string id, string n, string p) : User(id, n, p, "Driver"), available(true) {}
+Driver::Driver(string id, string n, string p,string pass) : User(id, n, p, "Driver",pass), available(true) {}
 
 void Driver::signUp() {
     User::signUp();
@@ -22,12 +22,13 @@ void Driver::askAvailability() {
     getline(cin, input);
     available = (input == "yes");
 }
-
-void Driver::displayInfo() {
-    User::displayInfo();
-    cout << "Vehicle Type: " << vehicleType << endl;
-    cout << "Availability: " << (available ? "Yes" : "No") << endl;
+ostream& operator<<(ostream& out, const Driver& driver) {
+    out << static_cast<const User&>(driver);  // Reuse User's operator<<
+    out << "Vehicle Type: " << driver.vehicleType << "\n";
+    out << "Availability: " << (driver.available ? "Yes" : "No") << "\n";
+    return out;
 }
+
 
 void Driver::addReview(const DriverReview& review) {
     driverReviews.push_back(review);
@@ -48,11 +49,7 @@ string Driver::getTimestamp() const {
     return "";
 }
 
-void Driver::setTimestamp() {
-    time_t now = time(0);
-    string timestamp = ctime(&now);
-    review.setTimestamp(timestamp);
-}
+
 
 void Driver::displayReviews() const {
     vector<DriverReview> reviews;
@@ -64,5 +61,17 @@ void Driver::displayReviews() const {
              << "\"" << r.getReviewMessage() << "\"\n\n";
     }
 }
+#include <ctime>  // Include this at the top
+
+string Driver::setTimestamp() {
+    time_t now = time(0);               // Get current time as time_t
+    char* dt = ctime(&now);             // Convert to string format
+    string timestamp(dt);
+    timestamp.pop_back();               // Remove trailing newline
+    return timestamp;
+}
+
+
+
 
 
