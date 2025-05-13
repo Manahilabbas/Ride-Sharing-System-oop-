@@ -1,4 +1,5 @@
 #include "review_manager.h"
+#include <stdexcept>
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -6,13 +7,19 @@
 using namespace std;
 
 void ReviewManager::saveReviewToFile(const string& driverName, const DriverReview& review) {
+  try{
     ofstream file(driverName + "_reviews.txt", ios::app);
     if (file.is_open()) {
         file << review.getPassengerName() << "|"
              << review.getRating() << "|"
              << review.getReviewMessage() << "|"
              << review.getTimestamp() << "\n";
+        
         file.close();
+    }
+}
+    catch (const exception& e) {
+        cerr << e.what() << endl;
     }
 }
 
@@ -29,7 +36,7 @@ void ReviewManager::loadReviews(const string& driverName, vector<DriverReview>& 
         getline(ss, timestamp);
 
         double rating = stod(ratingStr);
-        DriverReview review(name, 1, rating, comment, timestamp);
+        DriverReview review(name, rating, comment, timestamp);
         reviews.push_back(review);
     }
 }
