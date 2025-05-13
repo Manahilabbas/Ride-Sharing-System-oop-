@@ -1,28 +1,47 @@
 #include "driver_review.h"
+#include <sstream>
+#include <fstream>
 #include <iostream>
+
 using namespace std;
 
 DriverReview::DriverReview() {}
 
-DriverReview::DriverReview(string passenger, int ride, double rate, string review, string time) {
-    passengerName = passenger;
-    rideID = ride;
-    rating = (rate >= 1 && rate <= 5) ? rate : 3;
-    reviewMessage = review;
-    timestamp = time;
+DriverReview::DriverReview(const string& name, int rate, const string& message, const string& time)
+    : passengerName(name), rating(rate), reviewMessage(message), timestamp(time) {}
+
+DriverReview DriverReview::fromString(const string& line) {  // Removed the '&' symbol
+    stringstream ss(line);
+    string name, ratingStr, message, time;
+
+    getline(ss, name, '|');
+    getline(ss, ratingStr, '|');
+    getline(ss, message, '|');
+    getline(ss, time);
+
+    return DriverReview(name, stoi(ratingStr), message, time);
 }
 
-void DriverReview::displayReview() const {
-    cout << "\U0001F464 Passenger: " << passengerName << endl;
-    cout << "\u2B50 Rating: " << rating << "/5\n";
-    cout << "\U0001F4DD Review: " << reviewMessage << endl;
-    cout << "\U0001F4C5 Date: " << timestamp << endl;
+ostream& operator<<(ostream& out, const DriverReview& r) {
+    out << r.timestamp << " - " << r.passengerName
+        << " rated " << r.rating << " stars\n"
+        << "\"" << r.reviewMessage << "\"\n";
+    return out;
 }
 
-double DriverReview::getRating() const { return rating; }
+void displayReviewsFromFile(const string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error opening file: " << filename << endl;
+        return;
+    }
 
-string DriverReview::getTimestamp() const { return timestamp; }
+    string line;
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+        DriverReview r = DriverReview::fromString(line);
+        cout << r << endl;
+    }
 
-void DriverReview::setTimestamp(string time) {
-    timestamp = time;
+    file.close();
 }
