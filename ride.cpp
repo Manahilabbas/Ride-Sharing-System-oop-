@@ -8,9 +8,6 @@ using namespace std;
 
 
 
-map<string, int> Ride::zoneIndices;
-map<pair<string, string>, int> Ride::zoneMap;
-
 
 vector<ZonePoint> Ride::loadZonePoints(const string& filename) {
     vector<ZonePoint> points;
