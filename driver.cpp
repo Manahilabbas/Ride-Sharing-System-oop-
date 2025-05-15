@@ -6,7 +6,8 @@ using namespace std;
 
 Driver::Driver() : available(true) {}
 
-Driver::Driver(string id, string n, string p,string pass) : User(id, n, p, "Driver",pass), available(true) {}
+Driver::Driver(string id, string n, string p, string pass)
+    : User(id, n, p, "Driver", pass), available(true) {}
 
 void Driver::signUp() {
     User::signUp();
@@ -17,11 +18,13 @@ void Driver::signUp() {
 void Driver::askAvailability() {
     cout << "Enter your current zone: ";
     getline(cin, currentZone);
+
     string input;
     cout << "Are you available? (yes/no): ";
     getline(cin, input);
     available = (input == "yes");
 }
+
 ostream& operator<<(ostream& out, const Driver& driver) {
     out << static_cast<const User&>(driver);  // Reuse User's operator<<
     out << "Vehicle Type: " << driver.vehicleType << "\n";
@@ -29,18 +32,21 @@ ostream& operator<<(ostream& out, const Driver& driver) {
     return out;
 }
 
-
 void Driver::addReview(const DriverReview& review) {
     driverReviews.push_back(review);
 }
 
+string Driver::getCurrentZone() const {
+    return currentZone;
+}
 
+bool Driver::isAvailable() const {
+    return available;
+}
 
-string Driver::getCurrentZone() const { return currentZone; }
-
-bool Driver::isAvailable() const { return available; }
-
-string Driver::getVehicleType() const { return vehicleType; }
+string Driver::getVehicleType() const {
+    return vehicleType;
+}
 
 string Driver::getTimestamp() const {
     if (!driverReviews.empty()) {
@@ -49,11 +55,10 @@ string Driver::getTimestamp() const {
     return "";
 }
 
-
-
 void Driver::displayReviews() const {
     vector<DriverReview> reviews;
     ReviewManager::loadReviews(name, reviews);
+    
     cout << "\n⭐ Reviews for " << name << ":\n";
     for (const auto& r : reviews) {
         cout << r.getTimestamp() << " - " << r.getPassengerName()
@@ -61,7 +66,6 @@ void Driver::displayReviews() const {
              << "\"" << r.getReviewMessage() << "\"\n\n";
     }
 }
-#include <ctime>  // Include this at the top
 
 string Driver::setTimestamp() {
     time_t now = time(0);               // Get current time as time_t
@@ -70,8 +74,3 @@ string Driver::setTimestamp() {
     timestamp.pop_back();               // Remove trailing newline
     return timestamp;
 }
-
-
-
-
-
