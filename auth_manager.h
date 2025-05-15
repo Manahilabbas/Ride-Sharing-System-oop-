@@ -17,7 +17,6 @@ public:
     
     static string validatePassword();
     static bool isRegistered(const std::string& id);
-   // static User* signUp(std::map<std::string, std::string>& credentials, std::vector<User*>& users, bool isDriver);
     static User* login(std::map<std::string, std::string>& credentials, const std::vector<User*>& users);
     User* login(map<string, string>& credentials, vector<User*>& users);
 };
